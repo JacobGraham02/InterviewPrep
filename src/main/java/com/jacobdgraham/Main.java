@@ -1,4 +1,4 @@
-package src.main.java.com.jacobdgraham;
+package com.jacobdgraham;
 
 public class Main {
     public static void main(String[] args) {
