@@ -20,8 +20,14 @@ places after the decimal.
 Note: This challenge introduces precision problems. The test cases are scaled to six decimal places, though answers with absolute error of up to
 are acceptable.
      * @param arr a List of data where each item has an Integer data type
+     * @return 
      */
-    public final void ratiosOfNumberInstances(List<Integer> arr) {
+    public final String[] ratiosOfNumberInstances(List<Integer> arr) {
+        if (arr.size() == 0) {
+            return new String[]{"0.000000", "0.000000", "0.000000"};
+        }
+
+        final String[] ratios = new String[3];
         float instancesOfPositiveNumber = 0;
         float instancesOfNegativeNumber = 0;
         float instancesOfZero = 0;
@@ -37,13 +43,15 @@ are acceptable.
                 instancesOfNegativeNumber++;
             }
         }
-
-        if (arr.size() == 0) {
-            return "0.000000\n0.000000\n0.000000\n"; // Handle division by zero case.
-        }
         
-        System.out.println(String.format("%.6f", instancesOfPositiveNumber / arr.size()));
-        System.out.println(String.format("%.6f", instancesOfNegativeNumber / arr.size()));
-        System.out.println(String.format("%.6f", instancesOfZero / arr.size()));
+        final String ratioOfPositiveNumbers = String.format("%.6f", instancesOfPositiveNumber / arr.size());
+        final String ratioOfNegativeNumbers = String.format("%.6f", instancesOfNegativeNumber / arr.size());
+        final String ratioOfZeroes = String.format("%.6f", instancesOfZero / arr.size());
+
+        ratios[0] = ratioOfPositiveNumbers;
+        ratios[1] = ratioOfNegativeNumbers;
+        ratios[2] = ratioOfZeroes;
+
+        return ratios;
     }
 }
