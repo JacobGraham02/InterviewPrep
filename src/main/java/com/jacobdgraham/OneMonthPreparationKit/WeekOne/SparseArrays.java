@@ -43,7 +43,7 @@ matchingStrings has the following parameters:
 
      * @param strings an array of strings to search
      * @param queries an array of query strings to search for instances that occur in the 'strings' array
-     * @return
+     * @return a list of integers containing the number of times a string from 'queries' occurs in 'strings'
      */
     public final List<Integer> matchingStrings(List<String> strings, List<String> queries) {
         final Map<String, Integer> frequencyOfQueriesMap = new HashMap<>();
