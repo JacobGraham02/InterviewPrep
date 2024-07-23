@@ -75,14 +75,15 @@ CREATE TABLE SALARY_CHANGES(EMPNO NUMBER, NEW_SALARY DECIMAL (10,2), OLD_SALARY 
 */
 DELIMITER //
 CREATE TRIGGER SALARY_CHANGE_UPD
-	AFTER UPDATE ON EMPLOYEE FOR EACH ROW
-		BEGIN
-			IF ((OLD.SALARY != NEW.SALARY) AND (OLD.SALARY * 1.1 > NEW.SALARY)) THEN
-				INSERT INTO SALARY_CHANGES (EMPNO, NEW_SALARY, OLD_SALARY, GREATER_THAN_10, CUR_TIME) 
-                VALUES (1, 78000.25, 77000.25, TRUE, CURRENT_TIMESTAMP());
-            END IF;
-		END;
-    //
+    AFTER UPDATE ON EMPLOYEE FOR EACH ROW
+    BEGIN
+        IF (NEW.SALARY > OLD.SALARY AND NEW.SALARY > 1.1 * OLD.SALARY) THEN
+            INSERT INTO SALARY_CHANGES (EMPNO, NEW_SALARY, OLD_SALARY, GREATER_THAN_10, TIMESTMP) 
+            VALUES (NEW.EMPNO, NEW.SALARY, OLD.SALARY, TRUE, CURRENT_TIMESTAMP);
+        END IF;
+    END;
+//
+DELIMITER ;
     
 CREATE TABLE SALARY_CHANGES (
 EMPNO INT,
@@ -101,16 +102,14 @@ If they are PREVENT the update from happening by creating an error (hint use SIG
 */
 DELIMITER //
 CREATE TRIGGER PREVENT_UPDATE
-	BEFORE UPDATE ON EMPLOYEE FOR EACH ROW
-		BEGIN
-			DECLARE hiredates_not_equal CONDITION FOR SQLSTATE '45000';
-			IF (OLD.HIREDATE <> NEW.HIREDATE) THEN
-				SIGNAL hiredates_not_equal SET MESSAGE_TEXT = 'New and old hire dates are not equal';
-			-- On HIREDATE column, check if OLD and NEW HIREDATE are different. If so, create an SQLSTATE update 				
-            END IF;
-        END
-	//
-
+    BEFORE UPDATE ON EMPLOYEE FOR EACH ROW
+    BEGIN
+        IF (OLD.HIREDATE <> NEW.HIREDATE) THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cannot change hire date';
+        END IF;
+    END;
+//
+DELIMITER ;
 
 /* 
 Question 3 (5 marks)
@@ -119,16 +118,15 @@ Create a user-defined function (F_COUNT_EDUCATION)  to do the following:
     greater than the one passed to the function and return that number from the function.
 */
 DELIMITER //
-CREATE FUNCTION F_COUNT_EDUCATION (EDUCATION_LEVEL MEDIUMINT UNSIGNED)
-	RETURNS MEDIUMINT DETERMINISTIC
-		BEGIN
-			DECLARE emps MEDIUMINT;
-		-- SELECT COUNT(*) INTO c1 AS 'Employees with education higher than input' WHERE EMPLOYEE.EDLEVEL > EDUCATION_LEVEL;
-        SELECT COUNT(*) INTO emps FROM EMPLOYEE WHERE EMPLOYEE.EDLEVEL > EDUCATION_LEVEL;
-        
-        RETURN emps;
-	END
-	//
+CREATE FUNCTION F_COUNT_EDUCATION(EDUCATION_LEVEL INT)
+RETURNS INT DETERMINISTIC
+BEGIN
+    DECLARE emp_count INT;
+    SELECT COUNT(*) INTO emp_count FROM EMPLOYEE WHERE EDLEVEL > EDUCATION_LEVEL;
+    RETURN emp_count;
+END;
+//
+DELIMITER ;
     
 SELECT F_COUNT_EDUCATION(1);
 DROP FUNCTION IF EXISTS F_COUNT_EDUCATION;
@@ -199,13 +197,23 @@ Create a user-defined function (F_GET_LET_NUMB) to do the following:
 -- DATA_STRING is the string passed into function that will be stripped
 -- L_OR_N dictates whether the returned string will contain letters or numbers
 DELIMITER //
-CREATE FUNCTION F_GET_LET_NUM(DATA_STRING VARCHAR(50), L_OR_N VARCHAR(6)) 
-	-- Keep iterating one character forward until you find a character that is not allowed, then replace or skip it. 
-	RETURNS VARCHAR(50) DETERMINISTIC
-		BEGIN
-			DECLARE RESULT_STRING VARCHAR(50);
-            
-            IF (length(DATA_STRING) > 0) THEN
-				
-		END
-    //
+CREATE FUNCTION F_GET_LET_NUM(DATA_STRING VARCHAR(255), L_OR_N CHAR(6))
+RETURNS VARCHAR(255) DETERMINISTIC
+BEGIN
+    DECLARE idx INT DEFAULT 1;
+    DECLARE result VARCHAR(255) DEFAULT '';
+    DECLARE ch CHAR(1);
+
+    WHILE idx <= CHAR_LENGTH(DATA_STRING) DO
+        SET ch = SUBSTRING(DATA_STRING, idx, 1);
+        IF (L_OR_N = 'NUMBER' AND ch IN ('0','1','2','3','4','5','6','7','8','9')) OR
+           (L_OR_N = 'LETTER' AND ch REGEXP '[a-zA-Z]') THEN
+            SET result = CONCAT(result, ch);
+        END IF;
+        SET idx = idx + 1;
+    END WHILE;
+
+    RETURN result;
+END;
+//
+DELIMITER ;
