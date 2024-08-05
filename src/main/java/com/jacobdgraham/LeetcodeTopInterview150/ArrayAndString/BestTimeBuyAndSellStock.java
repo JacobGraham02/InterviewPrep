@@ -59,9 +59,18 @@ Explanation: In this case, no transactions are done and the max profit = 0.
         int profit = 0;
 
         for (int i = 1; i < prices.length; i++) {
+            /*  
+            * If we find a stock price that is smaller than our current best stock price, we assign that smaller value to the 
+            * best stock price variable
+            */
             if (bestStockPrice > prices[i]) {
                 bestStockPrice = prices[i];
             }
+            /*
+             * Else, if the current stock price in the list is larger than the current best stock price, we determine 
+             * if the profit that you get from subtracting the best stock price from the current stock price is larger than the current profit.
+             * If it is, we assign the maximum profit to be that value
+             */
             else if (profit < (prices[i] - bestStockPrice)) {
                 profit = (prices[i] - bestStockPrice);
             }
