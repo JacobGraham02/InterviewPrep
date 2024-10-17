@@ -8,27 +8,27 @@ public class RansomNote {
      * Given two strings <code>ransomNote</code> and <code>magazine</code>, return <code>true</code> if 
      * <code>ransomNote</code> can be constructed by using the letters from <code>magazine</code> and 
      * <code>false</code> otherwise.
-     * 
+     *
      * <p>Each letter in <code>magazine</code> can only be used once in <code>ransomNote</code>.</p>
-     * 
+     *
      * <h3>Example 1:</h3>
      * <pre>
      * Input: ransomNote = "a", magazine = "b"
      * Output: false
      * </pre>
-     * 
+     *
      * <h3>Example 2:</h3>
      * <pre>
      * Input: ransomNote = "aa", magazine = "ab"
      * Output: false
      * </pre>
-     * 
+     *
      * <h3>Example 3:</h3>
      * <pre>
      * Input: ransomNote = "aa", magazine = "aab"
      * Output: true
      * </pre>
-     * 
+     *
      * <h3>Constraints:</h3>
      * <ul>
      *   <li>1 &lt;= ransomNote.length, magazine.length &lt;= 10<sup>5</sup></li>
@@ -38,7 +38,7 @@ public class RansomNote {
      * @param ransomNote the string representing the ransom note.
      * @param magazine the string representing the letters available from the magazine.
      * @return <code>true</code> if ransomNote can be constructed from the letters in magazine, <code>false</code> otherwise.
-     * @see https://leetcode.com/problems/ransom-note/description/?envType=study-plan-v2&envId=top-interview-150
+     * @see <a href="https://leetcode.com/problems/ransom-note/description/?envType=study-plan-v2&envId=top-interview-150">Leetcode</a>
      */
     public boolean canConstruct(String ransomNote, String magazine) {
         Map<Character, Integer> characterCountMap = new HashMap<Character, Integer>();
