@@ -1,5 +1,8 @@
 package com.jacobdgraham.LeetcodeTopInterview150.LinkedList;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class CopyListWithRandomPointer {
     /**
      * Creates a deep copy of a linked list where each node contains an additional random pointer.
@@ -42,7 +45,40 @@ public class CopyListWithRandomPointer {
      * @see <a href="https://leetcode.com/problems/copy-list-with-random-pointer/">Leetcode problem</a>
      */
     public Node copyRandomList(Node head) {
-        // Method implementation here
-        return head;
+        if (head == null) {
+            return null;
+        }
+
+        /*
+         * A map to store the original nodes and their corresponding copied nodes.
+         */
+        Map<Node, Node> nodeMapping = new HashMap<>();
+
+        /*
+         * First pass: Create a new node for each original node and store them in the nodeMapping.
+         * This pass copies only the values, not the next or random pointers.
+         */
+        Node currentOriginal = head;
+        while (currentOriginal != null) {
+            Node newNode = new Node(currentOriginal.val);
+            nodeMapping.put(currentOriginal, newNode);
+            currentOriginal = currentOriginal.next;
+        }
+
+        /*
+         * Second pass: Assign the next and random pointers for the copied nodes using the nodeMapping.
+         */
+        currentOriginal = head;
+        while (currentOriginal != null) {
+            Node newNode = nodeMapping.get(currentOriginal);
+            newNode.next = nodeMapping.get(currentOriginal.next); // Set the next pointer
+            newNode.random = nodeMapping.get(currentOriginal.random); // Set the random pointer
+            currentOriginal = currentOriginal.next;
+        }
+
+        /*
+         * Return the head of the copied linked list, which is the copy of the original head.
+         */
+        return nodeMapping.get(head);
     }
 }
