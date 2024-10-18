@@ -1,5 +1,7 @@
 package com.jacobdgraham.LeetcodeTopInterview150.LinkedList;
 
+import java.util.Stack;
+
 public class ReverseLinkedListII {
     /**
      * Reverses the nodes of a singly linked list from position <code>left</code> to position <code>right</code>, inclusive.
@@ -36,7 +38,52 @@ public class ReverseLinkedListII {
      * @see <a href="https://leetcode.com/problems/reverse-linked-list-ii/">Leetcode problem</a>
      */
     public ListNode reverseBetween(ListNode head, int left, int right) {
-        // Method implementation here
-        return head;
+        if (head == null || (left >= right)) {
+            return head;
+        }
+
+        /*
+        Dummy node to handle any edge cases where left == 1.
+         */
+        ListNode newList = new ListNode(0);
+        newList.next = head;
+        /*
+        We have pointers for the start and end of the reversal
+         */
+        ListNode previousNode = newList;
+
+        /*
+        First, we will traverse the linked list and assign the previousNode pointer to just before where the variable 'left' is pointing to
+        This will allow us to add future nodes to the end of 'previousNode'. We start at 1 to avoid the head of the linked list
+         */
+        for (int i = 1; i < left; i++) {
+            previousNode = previousNode.next;
+        }
+
+        ListNode start = previousNode.next;
+        Stack<ListNode> nodeStack = new Stack<>();
+
+        /*
+        For our first pass, we traverse from the 'left' pointer to the 'right' pointer and push nodes onto the stack
+        This, at the end of the pass, will assign the value of 'start' to the end of the linked list. This will allow us to combine the
+        modified linked list together at the end of the algorithm
+         */
+        for (int i = left; i <= right; i++) {
+            nodeStack.push(start);
+            start = start.next;
+        }
+
+        /*
+        For our second pass, we pop nodes from the stack and reassign them in reverse order. Because previousNode is currently pointing at the
+        start of 'left', we only have to pop each of the stack elements off the stack and attach them as subsequent nodes onto previousNode
+         */
+        while (!(nodeStack.isEmpty())) {
+            previousNode.next = nodeStack.pop();
+            previousNode = previousNode.next;
+        }
+
+        previousNode.next = start;
+
+        return newList.next;
     }
 }
