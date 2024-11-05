@@ -1,6 +1,5 @@
-package com.jacobdgraham.LeetcodeTopInterview150.Problems;
+package com.jacobdgraham.DailyCodingProblem;
 
-import com.jacobdgraham.DailyCodingProblem.UnbiasedCoinToss;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
