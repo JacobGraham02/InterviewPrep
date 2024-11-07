@@ -35,6 +35,7 @@ public class RemoveNthNodeFromEndOfList {
      * @param head the head of the linked list
      * @param n the position from the end of the list to remove the node
      * @return the head of the modified linked list
+     * @see <a href="https://leetcode.com/problems/remove-nth-node-from-end-of-list/description/" title="A link to the leetcode problem 'Remove Nth Node From End of List'">Leetcode</a>
      */
     public ListNode removeNthFromEnd(ListNode head, int n) {
         ListNode dummyNode = new ListNode(0);
